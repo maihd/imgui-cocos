@@ -1,0 +1,19 @@
+﻿  DebugDraw.cpp
+  DetourDebugDraw.cpp
+  DetourCrowd.cpp
+  DetourLocalBoundary.cpp
+  DetourObstacleAvoidance.cpp
+  DetourPathCorridor.cpp
+  DetourPathQueue.cpp
+  DetourProximityGrid.cpp
+d:\imgui-cocos\cocos2d\external\recast\detourcrowd\detourobstacleavoidance.cpp(334): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  DetourTileCache.cpp
+  DetourTileCacheBuilder.cpp
+  DetourCommon.cpp
+  DetourAlloc.cpp
+  DetourNavMesh.cpp
+  DetourNavMeshBuilder.cpp
+  DetourNavMeshQuery.cpp
+  DetourNode.cpp
+  fastlz.c
+  librecast.vcxproj -> D:\imgui-cocos\proj.win32\Debug.win32\librecast.lib
