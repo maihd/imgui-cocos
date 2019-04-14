@@ -45,6 +45,9 @@
     <ClCompile Include="..\Classes\imgui_impl_opengl3.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\imgui_freetype.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -81,6 +84,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\imgui_impl_opengl3.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\imgui_freetype.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,6 +2,7 @@
 #include "imgui_cocos.h"
 
 #include "imgui/imgui.h"
+//#include "imgui_freetype.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
@@ -456,6 +457,12 @@ bool ImGuiGLView::initWithRect(const std::string& viewName, Rect rect, float fra
     //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
     //io.ConfigViewportsNoAutoMerge = true;
     //io.ConfigViewportsNoTaskBarIcon = true;
+
+    io.Fonts->AddFontDefault();
+    // See ImGuiFreeType::RasterizationFlags
+    //unsigned int flags = 0;
+    //flags |= ImGuiFreeType::NoHinting;
+    //ImGuiFreeType::BuildFontAtlas(io.Fonts, flags);
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();

@@ -153,6 +153,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\Classes\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\Classes\imgui_cocos.cpp" />
+    <ClCompile Include="..\Classes\imgui_freetype.cpp" />
     <ClCompile Include="..\Classes\imgui_impl_glfw.cpp" />
     <ClCompile Include="..\Classes\imgui_impl_opengl3.cpp" />
     <ClCompile Include="main.cpp" />
@@ -167,6 +168,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\imgui\imstb_textedit.h" />
     <ClInclude Include="..\Classes\imgui\imstb_truetype.h" />
     <ClInclude Include="..\Classes\imgui_cocos.h" />
+    <ClInclude Include="..\Classes\imgui_freetype.h" />
     <ClInclude Include="..\Classes\imgui_impl_glfw.h" />
     <ClInclude Include="..\Classes\imgui_impl_opengl3.h" />
     <ClInclude Include="main.h" />
