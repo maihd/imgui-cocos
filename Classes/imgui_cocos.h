@@ -3,6 +3,12 @@
 #include <cocos2d.h>
 #include "imgui/imgui.h"
 
+namespace ImGuiCocos
+{
+    void Schedule(const std::function<void(void)>& callback, const std::string& name);
+    void Unschedule(const std::string& name);
+}
+
 namespace cocos2d
 {
     class ImGuiGLView : public GLView
@@ -123,21 +129,5 @@ namespace cocos2d
 
     private:
         CC_DISALLOW_COPY_AND_ASSIGN(ImGuiGLView);
-    };
-
-    class ImGuiLayer : public Layer
-    {
-    public:
-        CREATE_FUNC(ImGuiLayer);
-
-    public:
-        std::function<void(void)> onGui;
-
-    protected:
-        void onDrawImGui(void);
-        void visit(Renderer* renderer, const Mat4& trasnform, uint32_t flags) override;
-
-    protected:
-        CustomCommand _drawImGuiCommand;
     };
 };

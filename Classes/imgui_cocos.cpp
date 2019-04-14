@@ -20,6 +20,100 @@
 #include "base/ccUTF8.h"
 #include "2d/CCCamera.h"
 
+class ImGuiLayer : public cocos2d::Layer
+{
+public:
+    CREATE_FUNC(ImGuiLayer);
+
+public:
+    bool init(void) override;
+
+protected:
+    void onDrawImGui(void);
+    void visit(cocos2d::Renderer* renderer, const cocos2d::Mat4& trasnform, uint32_t flags) override;
+
+protected:
+    cocos2d::CustomCommand _drawImGuiCommand;
+};
+
+bool ImGuiLayer::init(void)
+{
+    if (Layer::init())
+    {
+        this->setName("ImGuiCocos::Layer");
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void ImGuiLayer::onDrawImGui()
+{
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        GLFWwindow* backup_current_context = glfwGetCurrentContext();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backup_current_context);
+    }
+}
+
+void ImGuiLayer::visit(cocos2d::Renderer* renderer, const cocos2d::Mat4& transform, uint32_t flags)
+{
+    _drawImGuiCommand.init(this->getGlobalZOrder());
+    _drawImGuiCommand.func = CC_CALLBACK_0(ImGuiLayer::onDrawImGui, this);
+    renderer->addCommand(&_drawImGuiCommand);
+
+    Layer::visit(renderer, transform, flags);
+}
+
+namespace ImGuiCocos
+{
+    std::unordered_map<std::string, std::function<void(void)>> g_callbacks;
+
+    void Schedule(const std::function<void(void)>& callback, const std::string& name)
+    {
+        if (g_callbacks.find(name) != g_callbacks.end())
+        {
+            g_callbacks[name] = callback;
+        }
+        else
+        {
+            g_callbacks.emplace(name, callback);
+        }
+    }
+
+    void Unschedule(const std::string& name)
+    {
+        g_callbacks.erase(name);
+    }
+
+    void Update(float dt)
+    {
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame(dt);
+        ImGui::NewFrame();
+
+        for (auto p : g_callbacks)
+        {
+            p.second();
+        }
+
+        ImGui::Render();
+
+        cocos2d::Scene* runningScene = cocos2d::Director::getInstance()->getRunningScene();
+        if (runningScene && !runningScene->getChildByName("ImGuiCocos::Layer"))
+        {
+            runningScene->addChild(ImGuiLayer::create(), INT_MAX);
+        }
+    }
+}
+
 NS_CC_BEGIN
 
 // ImGuiEventHandler
@@ -298,6 +392,9 @@ ImGuiGLView::~ImGuiGLView()
     CCLOGINFO("deallocing ImGuiGLView: %p", this);
     ImGuiEventHandler::setGLViewImpl(nullptr);
 
+
+    Director::getInstance()->getScheduler()->unschedule("ImGuiCocos::Update", this);
+
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     glfwTerminate();
@@ -478,6 +575,8 @@ bool ImGuiGLView::initWithRect(const std::string& viewName, Rect rect, float fra
 
     ImGui_ImplGlfw_InitForOpenGL(getWindow(), false);
     ImGui_ImplOpenGL3_Init();
+
+    Director::getInstance()->getScheduler()->schedule(ImGuiCocos::Update, this, 0.0f, false, "ImGuiCocos::Update");
 
     return true;
 }
@@ -1088,40 +1187,6 @@ bool ImGuiGLView::initGlew()
 #endif // (CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
 
     return true;
-}
-
-void ImGuiLayer::onDrawImGui()
-{
-    if (onGui)
-    {
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        onGui();
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        ImGuiIO& io = ImGui::GetIO();
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-        {
-            GLFWwindow* backup_current_context = glfwGetCurrentContext();
-            ImGui::UpdatePlatformWindows();
-            ImGui::RenderPlatformWindowsDefault();
-            glfwMakeContextCurrent(backup_current_context);
-        }
-    }
-}
-
-
-void ImGuiLayer::visit(Renderer* renderer, const Mat4& transform, uint32_t flags)
-{
-    _drawImGuiCommand.init(this->getGlobalZOrder());
-    _drawImGuiCommand.func = CC_CALLBACK_0(ImGuiLayer::onDrawImGui, this);
-    renderer->addCommand(&_drawImGuiCommand);
-
-    Layer::visit(renderer, transform, flags);
 }
 
 NS_CC_END // end of namespace cocos2d;
