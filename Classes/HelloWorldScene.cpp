@@ -76,6 +76,7 @@ bool HelloWorld::init()
 
     ImGuiCocos::Schedule([]() {
         ImGui::ShowDemoWindow();
+        ImGui::ShowStyleEditor();
     }, "Haha");
     
     return true;
